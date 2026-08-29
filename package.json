@@ -2,6 +2,7 @@
   "name": "ecommerce-platform",
   "version": "1.0.0",
   "description": "Server-rendered e-commerce platform built with Express, EJS, and PostgreSQL.",
+  "private": true,
   "main": "src/server.js",
   "scripts": {
     "start": "node app.js",
@@ -11,10 +12,19 @@
     "ecommerce",
     "express",
     "postgresql",
-    "ejs"
+    "ejs",
+    "docker",
+    "rbac"
   ],
-  "author": "",
+  "author": "Yente Liu",
   "license": "UNLICENSED",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/a25618665/E-Commerce-Platform.git"
+  },
+  "engines": {
+    "node": ">=20"
+  },
   "dependencies": {
     "cookie-parser": "^1.4.6",
     "ejs": "^3.1.8",
