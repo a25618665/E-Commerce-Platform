@@ -1,4 +1,6 @@
 const { NotFoundError, ValidationError } = require("../errors");
+const { hashPassword, verifyPassword } = require("../security/password");
+const { normalizeRole } = require("../security/authorization");
 
 const REQUIRED_REGISTRATION_FIELDS = [
   "name",
@@ -91,7 +93,22 @@ function createShopService(repository) {
       }
 
       const member = await repository.findMemberByUsername(username);
-      return member && member.password === password ? member : null;
+      if (!member) {
+        return null;
+      }
+
+      const verification = await verifyPassword(password, member.password);
+      if (!verification.valid) {
+        return null;
+      }
+      if (verification.needsUpgrade) {
+        await repository.updateMemberPassword(member.member_id, await hashPassword(password));
+      }
+      return {
+        memberId: member.member_id,
+        username: member.username,
+        role: normalizeRole(member.member_type),
+      };
     },
 
     async register(input = {}) {
@@ -105,6 +122,7 @@ function createShopService(repository) {
       if (!member.email.includes("@")) {
         throw new ValidationError("A valid email address is required.");
       }
+      member.password = await hashPassword(member.password);
       return repository.createMember(member);
     },
 

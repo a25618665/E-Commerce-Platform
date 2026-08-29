@@ -81,3 +81,13 @@ test("coupon creation sends seven values through placeholders", async () => {
   assert.equal(pool.calls[0].values.length, 7);
   assert.match(pool.calls[0].text, /\$7/);
 });
+
+test("legacy password upgrades remain parameterized", async () => {
+  const pool = createPool();
+  const repository = createShopRepository(pool);
+
+  await repository.updateMemberPassword(7, "scrypt$hash");
+
+  assert.match(pool.calls[0].text, /SET password = \$1/);
+  assert.deepEqual(pool.calls[0].values, ["scrypt$hash", 7]);
+});

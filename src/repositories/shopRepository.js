@@ -77,6 +77,15 @@ function createShopRepository(pool) {
       return result.rows[0];
     },
 
+    async updateMemberPassword(memberId, password) {
+      await pool.query(
+        `UPDATE member
+         SET password = $1
+         WHERE member_id = $2`,
+        [password, memberId]
+      );
+    },
+
     async createCoupon(coupon) {
       const result = await pool.query(
         `INSERT INTO coupon

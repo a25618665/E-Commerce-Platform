@@ -20,11 +20,16 @@ test("loadConfig reads server and database settings from the environment", () =>
     DB_NAME: "shop_test",
     DB_USER: "shop",
     DB_PASSWORD: "local-only",
+    SESSION_SECRET: "test-session-secret",
   });
 
   assert.deepEqual(config, {
     port: 4000,
     nodeEnv: "test",
+    session: {
+      secret: "test-session-secret",
+      secure: false,
+    },
     database: {
       host: "database",
       port: 5433,
@@ -33,4 +38,8 @@ test("loadConfig reads server and database settings from the environment", () =>
       password: "local-only",
     },
   });
+});
+
+test("loadConfig requires an explicit production session secret", () => {
+  assert.throws(() => loadConfig({ NODE_ENV: "production" }), /SESSION_SECRET/);
 });

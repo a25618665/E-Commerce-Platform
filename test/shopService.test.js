@@ -10,6 +10,7 @@ function createRepository(overrides = {}) {
     listMembers: async () => [],
     findMemberByUsername: async () => null,
     createMember: async (member) => member,
+    updateMemberPassword: async () => {},
     createCoupon: async (coupon) => coupon,
     ...overrides,
   };
@@ -91,12 +92,28 @@ test("member presentation converts boolean sex values for the existing view", as
 });
 
 test("authentication returns the matching member", async () => {
-  const member = { username: "ada", password: "correct" };
+  const member = {
+    member_id: 7,
+    username: "ada",
+    password: "correct",
+    member_type: "seller",
+  };
+  let upgradedPassword;
   const service = createShopService(
-    createRepository({ findMemberByUsername: async () => member })
+    createRepository({
+      findMemberByUsername: async () => member,
+      updateMemberPassword: async (_memberId, password) => {
+        upgradedPassword = password;
+      },
+    })
   );
 
-  assert.equal(await service.authenticate({ username: "ada", password: "correct" }), member);
+  assert.deepEqual(await service.authenticate({ username: "ada", password: "correct" }), {
+    memberId: 7,
+    username: "ada",
+    role: "seller",
+  });
+  assert.match(upgradedPassword, /^scrypt\$/);
   assert.equal(await service.authenticate({ username: "ada", password: "wrong" }), null);
 });
 
@@ -142,6 +159,7 @@ test("registration validates email and normalizes six fields", async () => {
   });
   assert.equal(Object.keys(created).length, 6);
   assert.equal(created.name, "Ada");
+  assert.match(created.password, /^scrypt\$/);
 });
 
 test("coupon validation rejects invalid amounts and date ranges", async () => {
