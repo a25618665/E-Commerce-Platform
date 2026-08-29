@@ -91,7 +91,8 @@
         <div class="col-6">
           <img
             class="rounded mx-auto d-block"
-            src=".<%= img[0].Image_path %>"
+            src="<%= img[0].Image_path %>"
+            onerror="this.onerror=null;this.src='/img/product-placeholder.svg';"
             style="max-width: 70%; height: auto"
           />
         </div>

@@ -2,10 +2,10 @@
   "name": "ecommerce-platform",
   "version": "1.0.0",
   "description": "Server-rendered e-commerce platform built with Express, EJS, and PostgreSQL.",
-  "main": "app.js",
+  "main": "src/server.js",
   "scripts": {
     "start": "node app.js",
-    "test": "node --test"
+    "test": "node --test test/*.test.js"
   },
   "keywords": [
     "ecommerce",

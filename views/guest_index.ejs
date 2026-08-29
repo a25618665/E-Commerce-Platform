@@ -178,7 +178,7 @@
           <% for(let i=0; i < recomend_product.length; i++){ %>
           <a href="/product/?p_id=<%=  recomend_product[i].Product_id %>">
             <div class="card pcard mb-4">
-              <img src="<%= img[i].Image_path %> " />
+              <img src="<%= img[i].Image_path %>" onerror="this.onerror=null;this.src='/img/product-placeholder.svg';" />
               <div class="card-body">
                 <h5 class="card-title fw-bold mb-4">
                   <%= recomend_product[i].Name %>
