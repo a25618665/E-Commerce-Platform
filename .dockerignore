@@ -1,0 +1,26 @@
+.git
+.github
+.env
+.env.*
+!.env.example
+node_modules
+coverage
+test
+*.log
+
+# Superseded university prototypes and locally retained source material.
+dbOperations.js
+deletetest.js
+img.js
+login.html
+main.js
+pg.js
+register.html
+server.js
+spl_all_comp.js
+style.css
+test.js
+test2.js
+yahoo_all_comp.js
+html
+商品介面
