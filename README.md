@@ -32,3 +32,30 @@ Run the dependency-free configuration, security, service, repository, and route-
 ```bash
 npm test
 ```
+
+## Reproducible local environment
+
+The repository now includes a versioned PostgreSQL schema, deterministic demo data, and a two-service Docker Compose environment. From the repository root, run:
+
+```bash
+docker compose up --build
+```
+
+After PostgreSQL passes its readiness check, the application is available at `http://localhost:3000`. The first startup creates four relational tables, three role-specific demo accounts, six products, six placeholder image mappings, and one coupon. Persistent database state is stored in the named `postgres-data` volume.
+
+All local demo accounts use the password `PortfolioDemo123!`:
+
+| Role | Username |
+| --- | --- |
+| Administrator | `demo_admin` |
+| Seller | `demo_seller` |
+| Member | `demo_member` |
+
+These public credentials exist only for local portfolio demonstrations. Override the database values and `SESSION_SECRET` before using the application in any shared environment.
+
+To remove the local demo database and rerun the migration and seed scripts from a clean state:
+
+```bash
+docker compose down --volumes
+docker compose up --build
+```
