@@ -8,7 +8,7 @@ const config = loadConfig();
 const pool = createDatabasePool(config.database);
 const repository = createShopRepository(pool);
 const shopService = createShopService(repository);
-const app = createApp({ shopService });
+const app = createApp({ shopService, session: config.session });
 
 const server = app.listen(config.port, () => {
   console.log(`E-commerce server listening on port ${config.port}.`);
