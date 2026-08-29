@@ -1,0 +1,63 @@
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  test:
+    name: Node.js tests
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v6
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v7
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Install locked dependencies
+        run: npm ci
+
+      - name: Check JavaScript syntax
+        run: find src test -name '*.js' -print0 | xargs -0 -n1 node --check
+
+      - name: Run automated tests
+        run: npm test
+
+  full-stack-smoke-test:
+    name: PostgreSQL smoke test
+    needs: test
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v6
+
+      - name: Build and start application stack
+        run: docker compose up --build --wait --wait-timeout 180
+
+      - name: Verify storefront response
+        run: |
+          curl --fail --silent --show-error http://localhost:3000/ > /dev/null
+          curl --fail --silent --show-error http://localhost:3000/img/logo.svg > /dev/null
+          curl --fail --silent --show-error http://localhost:3000/img/user.svg > /dev/null
+          curl --fail --silent --show-error http://localhost:3000/img/product-placeholder.svg > /dev/null
+
+      - name: Show service logs after a failure
+        if: failure()
+        run: docker compose logs --no-color
+
+      - name: Stop application stack
+        if: always()
+        run: docker compose down --volumes

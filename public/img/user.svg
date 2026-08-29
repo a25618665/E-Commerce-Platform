@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" role="img" aria-labelledby="title">
+  <title id="title">User</title>
+  <circle cx="12" cy="12" r="11" fill="#dbe8ff"/>
+  <circle cx="12" cy="8" r="4" fill="#114ab4"/>
+  <path d="M5 20c.8-4 3.3-6 7-6s6.2 2 7 6" fill="#114ab4"/>
+</svg>
